@@ -1,0 +1,49 @@
+body {
+  padding: 0;
+  margin: 0;
+  background: #23102d;
+  box-sizing: border-box;
+  font-family: 'Raleway', Arial, sans-serif;
+  color: #ffffff;
+}
+#app {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a:hover, a:active, a:visited, a:focus {
+  text-decoration: none
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+a:hover {
+  color: #dad8d8;
+}
+
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.main {
+  max-width: 1300px;
+  margin: 40px auto;
+}
+
+.music-field {
+
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  padding: 0;
+}
+
+
