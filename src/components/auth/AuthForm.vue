@@ -1,43 +1,65 @@
-   
 <template>
-  <form class="login-form" @submit.prevent="login">
+  <form
+    class="login-form"
+    @submit.prevent="login"
+  >
     <div class="login-inputs">
-      <vs-input class="login-inputs__username" v-model="username" placeholder="User name">
+      <vs-input
+        class="login-inputs__username"
+        v-model="username"
+        placeholder="Имя пользователя"
+      >
         <template #icon>
-          <span class="iconify" data-icon="ant-design:user-outlined" data-inline="false"></span>
+          <span
+            class="iconify"
+            data-icon="ant-design:user-outlined"
+            data-inline="false"
+          >
+          </span>
         </template>
       </vs-input>
-      <vs-input class="login-inputs__password" type="password" v-model="password" placeholder="Password">
+      <vs-input
+        class="login-inputs__password"
+        type="password"
+        v-model="password"
+        placeholder="Password"
+      >
         <template #icon>
-          <span class="iconify" data-icon="carbon:password" data-inline="false"></span>
+          <span
+            class="iconify"
+            data-icon="carbon:password"
+            data-inline="false"
+          >
+          </span>
         </template>
       </vs-input>
     </div>
-    <vs-button
-      type="submit"
+    <error-item
+      v-if="error"
+      :error-message="'Неправильный логин или пароль.'"
     >
-      Войти
-    </vs-button>
-  </form>
 
+    </error-item>
+    <vs-button type="submit">Войти</vs-button>
+  </form>
 </template>
 
-
 <script>
-  import axios from 'axios'
-  import router from "../../router";
+  import ErrorItem from "../blocks/ErrorItem";
 
   export default {
     name: "AuthForm",
+    components: {ErrorItem},
     data() {
       return {
         username: '',
         password: '',
+        error: false
       }
     },
     methods: {
 
-      login: function () {
+      login() {
         const qs = require('querystring')
         const requestBody = {
           username: this.username,
@@ -48,21 +70,43 @@
             'Content-Type': 'application/x-www-form-urlencoded'
           }
         }
-        axios.post(process.env.VUE_APP_BASE_URL + "/token", qs.stringify(requestBody), config)
+        this.$axios.post("/token", qs.stringify(requestBody), config)
           .then((response) => {
+            console.log(response)
             localStorage.setItem('access_token', response.data.access_token)
-          }).catch(err=>{
+            localStorage.setItem('refresh_token', response.data.refresh_token)
+            this.$store.dispatch('getUserInfo', this)
+            this.$store.dispatch('changeMainLoading')
+            this.$router.push('/artists')
+            setTimeout(() => {
+              this.$store.dispatch('changeMainLoading')
+            }, 2000)
+          }).catch(err => {
+          this.password = ''
+          this.username = ''
+          this.error = true
+          setTimeout(() => {
+            this.error = false
+          }, 2000)
+        })
 
-        })
-          .then(() => {
-          router.push('artists/').catch((err) => {
-          })
-        })
       }
     }
   }
 </script>
 
-<style lang="scss">
-  @import "../../styles/auth-form.scss";
+<style scoped lang="scss">
+  .login-inputs {
+    align-items: center;
+    color: #000;
+
+    .vs-input__icon {
+    }
+
+    &__password, &__username {
+      padding-bottom: 15px;
+    }
+  }
+
+
 </style>

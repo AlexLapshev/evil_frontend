@@ -1,3 +1,6 @@
+html {
+  //height: 100%;
+}
 body {
   padding: 0;
   margin: 0;
@@ -5,10 +8,15 @@ body {
   box-sizing: border-box;
   font-family: 'Raleway', Arial, sans-serif;
   color: #ffffff;
+  min-height: 100%;
 }
+
 #app {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  min-height: 100%;
+  border: 3px solid yellow;
+
 }
 
 a:hover, a:active, a:visited, a:focus {
@@ -33,17 +41,58 @@ ul {
 }
 
 .main {
-  max-width: 1300px;
-  margin: 40px auto;
+  padding: 0 300px;
+  height: 100%;
 }
 
-.music-field {
+@media (max-width: 1900px) {
+  .main {
+    padding: 0 28vw 0 28vw;
+    overflow-x:hidden;
+  }
+}
 
+@media (max-width: 1300px) {
+  .main {
+    padding: 0 25vw 0 25vw;
+    overflow-x:hidden;
+  }
+}
+
+@media (max-width: 1150px) {
+  .main {
+    padding: 0 18vw 0 18vw;
+    overflow-x:hidden;
+  }
+}
+@media (max-width: 900px) {
+  .main {
+    padding: 0 12vw 0 12vw;
+    overflow-x:hidden;
+  }
 }
 
 h1, h2, h3, h4, h5, h6 {
   margin: 0;
-  padding: 0;
+  padding: 15px 0;
 }
 
+.add-form__background {
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  z-index: 50000;
+  left: 0;
+  top: 0;
+  background-color: rgba(0, 0, 0, 0.78);
+  overflow-x: hidden;
+}
 
+.close-btn {
+  cursor: pointer;
+  position: absolute;
+  right: 0;
+  &:hover {
+    color: #8c3838;
+  }
+}

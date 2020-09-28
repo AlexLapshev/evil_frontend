@@ -1,5 +1,5 @@
 <template>
-  <AuthForm></AuthForm>
+  <auth-form></auth-form>
 </template>
 
 <script>

@@ -12,16 +12,16 @@ module.exports = {
       .set('#', path.join(__dirname, './src/modules'))
   },
   css: {
-    loaderOptions: {
-      sass: {
-        sassOptions: {
-          includePaths: [
-            path.resolve(__dirname, 'src/core/')
-          ],
-          indentedSyntax: true,
-        },
-      },
-    },
+    // loaderOptions: {
+    //   sass: {
+    //     sassOptions: {
+    //       includePaths: [
+    //         path.resolve(__dirname, 'src/core/')
+    //       ],
+    //       indentedSyntax: true,
+    //     },
+    //   },
+    // },
   },
   assetsDir: '@/assets/',
 }

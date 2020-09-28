@@ -1,67 +1,49 @@
 <template>
-  <div class="main">
-    <div class="music-field">
-      <h2>#{{ playlistName}}</h2>
-      <TracksPlaylist v-on:removeTrackFromPlaylist="removeFromPlaylist"
-                      :playlistTracks="playlistTracks"></TracksPlaylist>
-    </div>
+  <div v-if="$store.getters.userAccessToken && $store.getters.USER_PLAYLIST_IDS.includes(playlistId)">
+    <h1>#{{userPlaylist.playlist_name}}</h1>
+    <track-item
+      v-for="trackId in userPlaylist.tracks"
+      :trackId="trackId"
+      :key="trackId"
+    >
+    </track-item>
+  </div>
+  <div v-else>
+    <h1>#{{playlist.playlist_name}}</h1>
+    <track-item
+      v-for="track in playlist.tracks"
+      :trackId="track.track_id"
+    >
+    </track-item>
   </div>
 </template>
 
 <script>
-  import axios from 'axios'
-  import TracksPlaylist from "../components/tracks/TrackPlaylist";
-  import router from "../router";
+  import TrackItem from "../components/tracks/TrackItem";
 
   export default {
     name: "Playlist",
+    components: {
+      TrackItem,
+    },
     data() {
       return {
-        playlistId: this.$route.params.id,
-        access_token: localStorage.getItem("access_token"),
-        playlistName: '',
-        playlistTracks: {},
+        playlistId: Number(this.$route.params.id),
+        playlist: {},
+        tracks: {}
       }
     },
-    components: {
-      TracksPlaylist,
-    },
-    props: ['id'],
-    methods: {
-      getData: function () {
-        this.playlistRequest().then((response) => {
-          this.playlistName = response.data.playlist_name
-          this.playlistTracks = response.data.tracks
-        }).catch((err) => {
-          router.push('/artists')
-        })
-      },
-
-      playlistRequest: function () {
-        let config = {}
-        if (this.access_token) {
-          config['headers'] = {"Authorization": "Bearer " + this.access_token}
-        }
-        return axios.get(process.env.VUE_APP_BASE_URL + '/playlist?id=' + this.playlistId, config)
-      },
-      removeFromPlaylist: function (track) {
-        axios.delete(process.env.VUE_APP_BASE_URL + "/playlist", {
-          headers: {
-            "Authorization": "Bearer " + this.access_token
-          },
-          data: {
-            "playlist_id": this.playlistId,
-            "track_id": track.id
-          }
-        }).then((response) => {
-          if (response.status === 200) {
-            this.playlistTracks.splice(this.playlistTracks.indexOf(track), 1)
-          }
-        })
-      },
+    computed: {
+      userPlaylist() {
+        return this.$store.getters.userPlaylists.find(el => el.playlist_id === Number(this.playlistId))
+      }
     },
     mounted() {
-      this.getData()
+      if (!localStorage.getItem('access_token') || !this.$store.getters.USER_PLAYLIST_IDS.includes(this.playlistId)) {
+        this.$axios('/playlists/' + this.playlistId).then(response => {
+          this.playlist = response.data
+        })
+      }
     },
   }
 </script>
